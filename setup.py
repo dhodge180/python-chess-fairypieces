@@ -54,22 +54,25 @@ def read_description():
 
 
 setuptools.setup(
-    name="chess",
-    version=chess.__version__,
+    name="python-chess-fairypieces",
+    version="0.1",
     author=chess.__author__,
     author_email=chess.__email__,
-    description=chess.__doc__.replace("\n", " ").strip(),
+    description="My custom version of python-chess to support fairy pieces",
     long_description=read_description(),
     long_description_content_type="text/x-rst",
     license="GPL-3.0+",
-    keywords="chess fen epd pgn polyglot syzygy gaviota uci xboard",
-    url="https://github.com/niklasf/python-chess",
+    keywords="chess fen",
+    url="https://github.com/dhodge180/python-chess-fairypieces",
     packages=["chess"],
     test_suite="test",
     zip_safe=False,  # For mypy
     package_data={
         "chess": ["py.typed"],
     },
+    install_requires=[
+        'python-chess' # Added
+    ],
     python_requires=">=3.8",
     classifiers=[
         "Development Status :: 5 - Production/Stable",

@@ -45,9 +45,10 @@ BISHOP: PieceType = 3
 ROOK: PieceType = 4
 QUEEN: PieceType = 5
 KING: PieceType = 6
-PIECE_TYPES: List[PieceType] = [PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING]
-PIECE_SYMBOLS = [None, "p", "n", "b", "r", "q", "k"]
-PIECE_NAMES = [None, "pawn", "knight", "bishop", "rook", "queen", "king"]
+GRASSHOPPER: PieceType = 7
+PIECE_TYPES: List[PieceType] = [PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, GRASSHOPPER]
+PIECE_SYMBOLS = [None, "p", "n", "b", "r", "q", "k", "g"]
+PIECE_NAMES = [None, "pawn", "knight", "bishop", "rook", "queen", "king", "grasshopper"]
 
 def piece_symbol(piece_type: PieceType) -> str:
     return typing.cast(str, PIECE_SYMBOLS[piece_type])
@@ -62,6 +63,7 @@ UNICODE_PIECE_SYMBOLS = {
     "Q": "♕", "q": "♛",
     "K": "♔", "k": "♚",
     "P": "♙", "p": "♟",
+    "G": "🨟", "g": "🨥",
 }
 
 FILE_NAMES = ["a", "b", "c", "d", "e", "f", "g", "h"]
@@ -781,6 +783,7 @@ class BaseBoard:
         self.rooks = BB_EMPTY
         self.queens = BB_EMPTY
         self.kings = BB_EMPTY
+        self.grasshoppers = BB_EMPTY
 
         self.promoted = BB_EMPTY
 
@@ -809,6 +812,8 @@ class BaseBoard:
             bb = self.queens
         elif piece_type == KING:
             bb = self.kings
+        elif piece_type == GRASSHOPPER:
+            bb = self.grasshoppers
         else:
             assert False, f"expected PieceType, got {piece_type!r}"
 
@@ -848,6 +853,8 @@ class BaseBoard:
             return ROOK
         elif self.queens & mask:
             return QUEEN
+        elif self.grasshoppers & mask:
+            return GRASSHOPPER
         else:
             return KING
 
@@ -1027,6 +1034,8 @@ class BaseBoard:
             self.queens ^= mask
         elif piece_type == KING:
             self.kings ^= mask
+        elif piece_type == GRASSHOPPER:
+            self.grasshoppers ^= mask
         else:
             return None
 
@@ -1066,6 +1075,8 @@ class BaseBoard:
             self.queens |= mask
         elif piece_type == KING:
             self.kings |= mask
+        elif piece_type == GRASSHOPPER:
+            self.grasshoppers |= mask
         else:
             return
 
@@ -1848,6 +1859,7 @@ class Board(BaseBoard):
 
             for to_square in scan_reversed(targets):
                 if square_rank(to_square) in [0, 7]:
+                    #yield Move(from_square, to_square, GRASSHOPPER)
                     yield Move(from_square, to_square, QUEEN)
                     yield Move(from_square, to_square, ROOK)
                     yield Move(from_square, to_square, BISHOP)
@@ -1871,6 +1883,7 @@ class Board(BaseBoard):
             from_square = to_square + (8 if self.turn == BLACK else -8)
 
             if square_rank(to_square) in [0, 7]:
+                #yield Move(from_square, to_square, GRASSHOPPER)
                 yield Move(from_square, to_square, QUEEN)
                 yield Move(from_square, to_square, ROOK)
                 yield Move(from_square, to_square, BISHOP)
